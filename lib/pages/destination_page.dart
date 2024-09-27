@@ -9,21 +9,26 @@ class DestinationPage extends StatefulWidget {
 }
 
 class _DestinationPageState extends State<DestinationPage> {
+  final TextEditingController _departureController = TextEditingController();
   final TextEditingController _destinationController = TextEditingController();
 
   void _navigateToConfirm() {
+    String departure = _departureController.text.trim();
     String destination = _destinationController.text.trim();
-    if (destination.isNotEmpty) {
+
+    if (departure.isNotEmpty && destination.isNotEmpty) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              ConfirmDestinationPage(destination: destination),
+          builder: (context) => ConfirmDestinationPage(
+              departure: departure, destination: destination),
         ),
       );
+      _departureController.clear(); // Limpa o campo após a navegação
       _destinationController.clear(); // Limpa o campo após a navegação
     } else {
-      _showDialog('Por favor, informe um Local de Partida!');
+      _showDialog(
+          'Por favor, informe tanto o Local de Partida quanto o Destino!');
     }
   }
 
@@ -51,6 +56,35 @@ class _DestinationPageState extends State<DestinationPage> {
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
+            // Campo para Local de Partida
+            Container(
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.symmetric(horizontal: 25),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _departureController,
+                      decoration: const InputDecoration(
+                        hintText: 'Local de Partida',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  const Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Campo para Destino
             Container(
               padding: const EdgeInsets.all(12),
               margin: const EdgeInsets.symmetric(horizontal: 25),
@@ -65,7 +99,7 @@ class _DestinationPageState extends State<DestinationPage> {
                     child: TextField(
                       controller: _destinationController,
                       decoration: const InputDecoration(
-                        hintText: '',
+                        hintText: 'Destino',
                         border: InputBorder.none,
                       ),
                     ),
@@ -80,7 +114,7 @@ class _DestinationPageState extends State<DestinationPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _navigateToConfirm,
-              child: const Text('Confirmar Local de Partida'),
+              child: const Text('Iniciar Viagem'),
             ),
           ],
         ),

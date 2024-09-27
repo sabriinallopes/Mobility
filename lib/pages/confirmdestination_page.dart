@@ -4,7 +4,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ConfirmDestinationPage extends StatefulWidget {
-  const ConfirmDestinationPage({super.key, required String destination});
+  final String destination;
+  final String departure;
+
+  const ConfirmDestinationPage({
+    super.key,
+    required this.destination,
+    required this.departure,
+  });
 
   @override
   _ConfirmDestinationPageState createState() => _ConfirmDestinationPageState();
@@ -13,12 +20,10 @@ class ConfirmDestinationPage extends StatefulWidget {
 class _ConfirmDestinationPageState extends State<ConfirmDestinationPage> {
   LatLng userLocation = const LatLng(-23.5505, -46.6333); // São Paulo
   LatLng? destinationLocation;
-  String destination = '';
   String estimatedTime = 'Carregando...';
 
   void _getDirections() async {
     final response = await http.get(Uri.parse(
-      //COLOCAR A CHAVE DA API AQUI
         'https://maps.googleapis.com/maps/api/directions/json?origin=${userLocation.latitude},${userLocation.longitude}&destination=${destinationLocation?.latitude},${destinationLocation?.longitude}&key=YOUR_API_KEY'));
 
     if (response.statusCode == 200) {
@@ -41,6 +46,13 @@ class _ConfirmDestinationPageState extends State<ConfirmDestinationPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    //converter o texto do destino em coordenadas, se necessário
+    destinationLocation = const LatLng(-23.5617, -46.6550); // Exemplo de destino
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -57,21 +69,26 @@ class _ConfirmDestinationPageState extends State<ConfirmDestinationPage> {
                 labelText: 'Destino',
                 border: OutlineInputBorder(),
               ),
-              onChanged: (value) {
-                setState(() {
-                  destination = value;
-                });
-              },
+              readOnly: true,
+              controller: TextEditingController(text: widget.destination),
             ),
           ),
+          // Botão para iniciar a viagem
           ElevatedButton(
             onPressed: () {
-              // usar um geocodificador para converter o endereço em coordenadas
-              // Aqui, estamos definindo um destino fixo como exemplo
-              destinationLocation = LatLng(-23.5617, -46.6550); // Exemplo de destino
-              _getDirections();
+              if (destinationLocation != null) {
+                _getDirections();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Viagem iniciada!')),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text('Por favor, insira um destino.')),
+                );
+              }
             },
-            child: const Text('Confirmar Destino'),
+            child: const Text('Iniciar Viagem'),
           ),
           // Mapa
           Expanded(
@@ -82,15 +99,15 @@ class _ConfirmDestinationPageState extends State<ConfirmDestinationPage> {
               ),
               markers: {
                 Marker(
-                  markerId: MarkerId('user'),
+                  markerId: const MarkerId('user'),
                   position: userLocation,
-                  infoWindow: InfoWindow(title: 'Você está aqui'),
+                  infoWindow: const InfoWindow(title: 'Você está aqui'),
                 ),
                 if (destinationLocation != null)
                   Marker(
-                    markerId: MarkerId('destination'),
+                    markerId: const MarkerId('destination'),
                     position: destinationLocation!,
-                    infoWindow: InfoWindow(title: destination),
+                    infoWindow: InfoWindow(title: widget.destination),
                   ),
               },
             ),
@@ -107,23 +124,6 @@ class _ConfirmDestinationPageState extends State<ConfirmDestinationPage> {
                 ),
                 const SizedBox(height: 5),
                 Text('Tempo estimado: $estimatedTime'),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Viagem iniciada!')),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4CAF50),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text('Iniciar Viagem'),
-                ),
               ],
             ),
           ),

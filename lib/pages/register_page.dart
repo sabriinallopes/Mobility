@@ -118,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return DropdownButtonFormField<String>(
       value: _selectedDisability,
       decoration: InputDecoration(
-        labelText: 'Tipo de Deficiência',
+        labelText: 'Condições de Acessibilidade',
         filled: true,
         fillColor: Colors.grey[200],
         border: OutlineInputBorder(

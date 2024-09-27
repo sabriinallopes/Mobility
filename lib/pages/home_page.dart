@@ -81,18 +81,6 @@ class _HomePageState extends State<HomePage> {
                   onTap: () => _navigateToPage(0),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.person, color: Colors.white),
-                  title: const Text('Perfil',
-                      style: TextStyle(color: Colors.white)),
-                  onTap: () {
-                    Navigator.pop(context); // Fecha o Drawer
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const UserPage()),
-                    );
-                  },
-                ),
-                ListTile(
                   leading: const Icon(Icons.payment, color: Colors.white),
                   title: const Text('Pagamentos',
                       style: TextStyle(color: Colors.white)),

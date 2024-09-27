@@ -173,7 +173,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           return Card(
                             margin: const EdgeInsets.symmetric(vertical: 10),
                             child: ListTile(
-                              title: Text(card['Titular']!),
+                              title: Text(card['holder']!), // Corrigido
                               subtitle: Text(
                                   '**** **** **** ${card['number']!.substring(12)}'),
                               trailing: Text(card['expiry']!),

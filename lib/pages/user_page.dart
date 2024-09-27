@@ -19,6 +19,12 @@ class _UserPageState extends State<UserPage> {
       appBar: AppBar(
         title: const Text('Perfil do Usuário'),
         backgroundColor: const Color(0xFF4CAF50),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/home');
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,7 +51,8 @@ class _UserPageState extends State<UserPage> {
                       email: email,
                       phone: phone,
                       disability: disability,
-                      onProfileUpdated: (updatedName, updatedEmail, updatedPhone, updatedDisability) {
+                      onProfileUpdated: (updatedName, updatedEmail,
+                          updatedPhone, updatedDisability) {
                         setState(() {
                           name = updatedName;
                           email = updatedEmail;
@@ -59,7 +66,8 @@ class _UserPageState extends State<UserPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF4CAF50),
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -148,7 +156,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   );
 
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Perfil atualizado com sucesso!')),
+                    const SnackBar(
+                        content: Text('Perfil atualizado com sucesso!')),
                   );
 
                   Navigator.pop(context); // Voltar para a página de perfil
@@ -156,7 +165,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF4CAF50),
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
