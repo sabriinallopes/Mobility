@@ -11,6 +11,7 @@ class _UserPageState extends State<UserPage> {
   String name = "João Silva";
   String email = "joao.silva@example.com";
   String phone = "123456789";
+  String cpf = "12345678900";
   String disability = "Visual";
 
   @override
@@ -18,6 +19,7 @@ class _UserPageState extends State<UserPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Perfil do Usuário'),
+        foregroundColor: Colors.white, 
         backgroundColor: const Color(0xFF4CAF50),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -33,13 +35,17 @@ class _UserPageState extends State<UserPage> {
           children: [
             const Text(
               'Informações Pessoais',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white), 
             ),
             const SizedBox(height: 20),
             _buildInfoTile('Nome', name),
             _buildInfoTile('E-mail', email),
             _buildInfoTile('Telefone', phone),
-            _buildInfoTile('Deficiência', disability),
+            _buildInfoTile('CPF', cpf),
+            _buildInfoTile('Condições de Acessibilidade', disability),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
@@ -50,13 +56,15 @@ class _UserPageState extends State<UserPage> {
                       name: name,
                       email: email,
                       phone: phone,
+                      cpf: cpf,
                       disability: disability,
                       onProfileUpdated: (updatedName, updatedEmail,
-                          updatedPhone, updatedDisability) {
+                          updatedPhone, updatedCpf, updatedDisability) {
                         setState(() {
                           name = updatedName;
                           email = updatedEmail;
                           phone = updatedPhone;
+                          cpf = updatedCpf;
                           disability = updatedDisability;
                         });
                       },
@@ -66,13 +74,17 @@ class _UserPageState extends State<UserPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF4CAF50),
+                foregroundColor: Colors.white,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text('Editar Informações'),
+              child: const Text(
+                'Editar Informações',
+                style: TextStyle(color: Colors.white), 
+              ),
             ),
           ],
         ),
@@ -86,8 +98,14 @@ class _UserPageState extends State<UserPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 18)),
-          Text(value, style: const TextStyle(fontSize: 18)),
+          Text(label,
+              style: const TextStyle(
+                fontSize: 18,
+              )), // Cor do texto
+          Text(value,
+              style: const TextStyle(
+                fontSize: 18,
+              )),
         ],
       ),
     );
@@ -98,14 +116,16 @@ class EditProfilePage extends StatefulWidget {
   final String name;
   final String email;
   final String phone;
+  final String cpf;
   final String disability;
-  final Function(String, String, String, String) onProfileUpdated;
+  final Function(String, String, String, String, String) onProfileUpdated;
 
   const EditProfilePage({
     super.key,
     required this.name,
     required this.email,
     required this.phone,
+    required this.cpf,
     required this.disability,
     required this.onProfileUpdated,
   });
@@ -118,6 +138,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _cpfController = TextEditingController();
   final TextEditingController _disabilityController = TextEditingController();
 
   @override
@@ -126,6 +147,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _nameController.text = widget.name;
     _emailController.text = widget.email;
     _phoneController.text = widget.phone;
+    _cpfController.text = widget.cpf;
     _disabilityController.text = widget.disability;
   }
 
@@ -143,7 +165,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
             _buildTextField('Nome', _nameController),
             _buildTextField('E-mail', _emailController),
             _buildTextField('Telefone', _phoneController),
-            _buildTextField('Deficiência', _disabilityController),
+            _buildTextField('CPF', _cpfController),
+            _buildTextField(
+                'Condições de Acessibilidade', _disabilityController),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -152,6 +176,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     _nameController.text,
                     _emailController.text,
                     _phoneController.text,
+                    _cpfController.text,
                     _disabilityController.text,
                   );
 
@@ -160,7 +185,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         content: Text('Perfil atualizado com sucesso!')),
                   );
 
-                  Navigator.pop(context); // Voltar para a página de perfil
+                  Navigator.pop(context);
                 }
               },
               style: ElevatedButton.styleFrom(
@@ -171,7 +196,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text('Salvar'),
+              child: const Text(
+                'Salvar',
+                style: TextStyle(color: Colors.white), 
+              ),
             ),
           ],
         ),
@@ -208,6 +236,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
     if (_phoneController.text.isEmpty) {
       _showError('Por favor, insira seu telefone.');
+      return false;
+    }
+    if (_cpfController.text.isEmpty || _cpfController.text.length != 11) {
+      _showError('Por favor, insira um CPF válido (11 dígitos).');
       return false;
     }
     if (_disabilityController.text.isEmpty) {

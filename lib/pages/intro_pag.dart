@@ -1,25 +1,26 @@
-import 'package:flutter/material.dart';
-import 'login_page.dart'; // Importar a LoginPage
+import 'package:flutter/material.dart'; 
+import 'login_page.dart'; // Importa a LoginPage.
 
 class IntroPag extends StatelessWidget {
-  const IntroPag({super.key});
+  const IntroPag({super.key}); 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.white,
+        color: Colors.white, 
         child: Stack(
           children: [
+            // círculos do design
             Positioned(
               top: 100,
               left: -50,
               child: Container(
-                width: 300,
-                height: 300,
+                width: 300, 
+                height: 300, 
                 decoration: BoxDecoration(
-                  color: Colors.blueAccent,
-                  borderRadius: BorderRadius.circular(150),
+                  color: Colors.blueAccent, 
+                  borderRadius: BorderRadius.circular(150), 
                 ),
               ),
             ),
@@ -27,38 +28,39 @@ class IntroPag extends StatelessWidget {
               bottom: 100,
               right: -50,
               child: Container(
-                width: 300,
-                height: 300,
+                width: 300, 
+                height: 300, 
                 decoration: BoxDecoration(
-                  color: Colors.greenAccent,
-                  borderRadius: BorderRadius.circular(150),
+                  color: Colors.greenAccent, 
+                  borderRadius: BorderRadius.circular(150), 
                 ),
               ),
             ),
             Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center, 
                 children: [
                   const Text(
-                    'Mobility',
+                    'Mobility', 
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 50,
-                      color: Colors.black,
+                      fontWeight: FontWeight.bold, 
+                      fontSize: 50, 
+                      color: Colors.black, 
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 20), 
                   const Text(
-                    'Seu caminho, sua liberdade.',
+                    'Seu caminho, sua liberdade.', // Slogan do aplicativo.
                     style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.black,
+                      fontSize: 24, 
+                      color: Colors.black, 
                     ),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.center, 
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 40), 
                   ElevatedButton(
                     onPressed: () {
+                      // Navega para a página de login ao clicar no botão.
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -66,19 +68,19 @@ class IntroPag extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.green, 
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 15),
+                          horizontal: 30, vertical: 15), 
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12), 
                       ),
                     ),
                     child: const Text(
-                      'Iniciar Viagem',
+                      'Iniciar Viagem', 
                       style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        color: Colors.white, 
+                        fontWeight: FontWeight.bold, 
+                        fontSize: 18, 
                       ),
                     ),
                   ),

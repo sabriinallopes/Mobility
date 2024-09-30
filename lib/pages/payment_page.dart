@@ -8,15 +8,17 @@ class PaymentPage extends StatefulWidget {
   State<PaymentPage> createState() => _PaymentPageState();
 }
 
+//Variáveis para o armazenamento de dados do cartão
 class _PaymentPageState extends State<PaymentPage> {
   String cardNumber = '';
   String expiryDate = '';
   String cardHolderName = '';
   String cvvCode = '';
   bool isCvvFocused = false;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey =
+      GlobalKey<FormState>(); // Chave para o formulário.
 
-  // Lista para armazenar os cartões
+  // Lista para armazenar os cartões salvos
   List<Map<String, String>> savedCards = [];
 
   @override
@@ -53,74 +55,79 @@ class _PaymentPageState extends State<PaymentPage> {
             Expanded(
               child: SingleChildScrollView(
                 child: Form(
-                  key: formKey,
+                  key: formKey, // Associa a chave ao formulário.
                   child: Column(
                     children: <Widget>[
+                      // Campo para número do cartão
                       _buildTextFormField(
                         label: 'Número do Cartão',
                         hint: 'XXXX XXXX XXXX XXXX',
                         onChanged: (value) {
                           setState(() {
-                            cardNumber = value;
+                            cardNumber = value; // Atualiza o número do cartão.
                           });
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Por favor, insira o número do cartão.';
+                            return 'Por favor, insira o número do cartão.'; // Mensagem se vazio.
                           }
                           if (value.length != 16) {
-                            return 'O número do cartão deve ter 16 dígitos.';
+                            return 'O número do cartão deve ter 16 dígitos.'; // Mensagem se inválido.
                           }
-                          return null;
+                          return null; // Retorna null se válido.
                         },
                       ),
+                      // Campo para data de validade
                       _buildTextFormField(
                         label: 'Data de Validade',
                         hint: 'MM/AA',
                         onChanged: (value) {
                           setState(() {
-                            expiryDate = value;
+                            expiryDate = value; // Atualiza a data de validade.
                           });
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Por favor, insira a data de validade.';
+                            return 'Por favor, insira a data de validade.'; // Mensagem se vazio.
                           }
-                          return null;
+                          return null; // Retorna null se válido.
                         },
                       ),
+                      // Campo para CVV
                       _buildTextFormField(
                         label: 'CVV',
                         hint: 'XXX',
                         onChanged: (value) {
                           setState(() {
-                            cvvCode = value;
-                            isCvvFocused = true;
+                            cvvCode = value; // Atualiza o CVV.
+                            isCvvFocused = true; // Marca CVV como focado.
                           });
                         },
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Por favor, insira o CVV.';
+                            return 'Por favor, insira o CVV.'; // Mensagem se vazio.
                           }
                           if (value.length != 3) {
-                            return 'O CVV deve ter 3 dígitos.';
+                            return 'O CVV deve ter 3 dígitos.'; // Mensagem se inválido.
                           }
-                          return null;
+                          return null; // Retorna null se válido.
                         },
                       ),
+                      // Campo para nome do titular
                       _buildTextFormField(
                         label: 'Nome do Titular',
                         onChanged: (value) {
                           setState(() {
-                            cardHolderName = value;
+                            cardHolderName =
+                                value; // Atualiza o nome do titular.
                           });
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Por favor, insira o nome do titular.';
+                            return 'Por favor, insira o nome do titular.'; // Mensagem se vazio.
                           }
-                          return null;
+                          return null; // Retorna null se válido.
                         },
                         hint: '',
                       ),
@@ -157,7 +164,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               expiryDate = '';
                               cardHolderName = '';
                               cvvCode = '';
-                              isCvvFocused = false;
+                              isCvvFocused = false; // Reseta o estado do CVV.
                             });
                           }
                         },
@@ -173,10 +180,11 @@ class _PaymentPageState extends State<PaymentPage> {
                           return Card(
                             margin: const EdgeInsets.symmetric(vertical: 10),
                             child: ListTile(
-                              title: Text(card['holder']!), // Corrigido
+                              title: Text(card['holder']!), // Nome do titular.
                               subtitle: Text(
-                                  '**** **** **** ${card['number']!.substring(12)}'),
-                              trailing: Text(card['expiry']!),
+                                  '**** **** **** ${card['number']!.substring(12)}'), // Exibe os últimos 4 dígitos do cartão.
+                              trailing: Text(
+                                  card['expiry']!), // Exibe a data de validade.
                             ),
                           );
                         },
@@ -192,6 +200,7 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
+  // Método para construir campos de texto
   TextFormField _buildTextFormField({
     required String label,
     required String hint,
