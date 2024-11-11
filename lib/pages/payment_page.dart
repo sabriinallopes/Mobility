@@ -166,6 +166,13 @@ class _PaymentPageState extends State<PaymentPage> {
                               cvvCode = '';
                               isCvvFocused = false; // Reseta o estado do CVV.
                             });
+
+                            // Exibe uma mensagem de sucesso
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                      Text('Cartão adicionado com sucesso!')),
+                            );
                           }
                         },
                       ),
