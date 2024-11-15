@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';
+import 'login_page.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -20,7 +22,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _dataNascimentoController =
       TextEditingController();
   final TextEditingController _telefoneController = TextEditingController();
-
   String?
       _selectedDisability; // Armazena a condição de acessibilidade selecionada.
   final List<String> _disabilities = [
@@ -168,23 +169,59 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   // Método chamado ao pressionar o botão de registro.
-  void _registerUser() {
+  Future<void> _registerUser() async {
     if (_formKey.currentState?.validate() ?? false) {
-      // Valida o formulário.
-      // Implementar a lógica de registro aqui.
+      // Implement secure registration logic
+      final url = Uri.parse('http://127.0.0.1/Mobility/banco/cadastro.php');
+      // Replace with your secure HTTPS URL
 
-      // Mensagem de sucesso.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registrado com sucesso!')),
-      );
+      final body = {
+        'nome': _nameController.text,
+        'cpf': _cpfController.text,
+        'datanasc': _dataNascimentoController.text,
+        'telefone': _telefoneController.text,
+        'email': _emailController.text,
+        'senha': _confirmPasswordController.text,
+        'necessidade': _needsController.text,
+      };
 
-      // Redirecionar para a HomePage.
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const HomePage()), // Navegação para a página inicial.
-      );
+      try {
+        final response = await http.post(url, body: jsonEncode(body));
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          if (responseData['success'] == true) {
+            // Registration successful
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Registrado com sucesso!')),
+            );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          } else {
+            // Handle server-side validation error
+            error(context, responseData['error']);
+          }
+        } else {
+          // Handle network or server error
+          error(context, 'Falha no registro. Tente novamente mais tarde.');
+        }
+      } catch (erro) {
+        // Handle general error (e.g., network issue)
+        error(context, 'Erro durante o registro: $erro');
+      }
     }
+  }
+
+  void error(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: 'OK',
+          onPressed: ScaffoldMessenger.of(context).hideCurrentSnackBar,
+        ),
+      ),
+    );
   }
 }
